@@ -70,6 +70,7 @@ void setup() {
 
   meosc.plug(this, "setgravity", "/setgravity");
   
+  squigglez.mk(0, 200, 200, 200, 200, 14, "mint");
 
   
 }
@@ -161,33 +162,10 @@ void setgravity(float gx, float gy) {
 
 
 void oscEvent(OscMessage theOscMessage) {
-  
-  
-  if(theOscMessage.checkAddrPattern("/mksquig")==true) {
-      int m1 = theOscMessage.get(0).intValue();  
-      int m2 = theOscMessage.get(1).intValue();  
-      int m3 = theOscMessage.get(2).intValue();  
-      int m4 = theOscMessage.get(3).intValue();  
-      int m5 = theOscMessage.get(4).intValue();  
-      int m6 = theOscMessage.get(5).intValue();  
-      String m7 = theOscMessage.get(6).stringValue();  
-      squigglez.mk(m1, m2, m3,m4,m5,m6,m7);
-  }
-      
-  
-  
-  
-  
   if (theOscMessage.isPlugged()==false) {
     println("### received an osc message.");
     println("### addrpattern\t"+theOscMessage.addrPattern());
     println("### typetag\t"+theOscMessage.typetag());
   }
-}
-
-
-void keyPressed(){
-    squigglez.mk(0, 200, 200, 200, 200, 14, "mint");
-
 }
 
