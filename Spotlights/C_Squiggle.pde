@@ -11,6 +11,11 @@ class Squiggle {
   float curvePointX = 0; 
   float curvePointY = 0;
   float x1, y1, addx, addy;
+  
+  int anigo = 0;
+  int anifreq = 5;
+  int aflo=1;
+  int afhi=5;
 
   Squiggle(int aix, int ax, int ay, int aw, int ah, int adensity, String acl) {
     ix = aix;
@@ -32,6 +37,7 @@ class Squiggle {
 
   void render() {
     buf.beginDraw();
+    buf.background(0);
     buf.smooth();
     buf.noFill();
     buf.strokeWeight(2);
@@ -67,6 +73,10 @@ class Squiggle {
     img = buf.get(0, 0, buf.width, buf.height);
   }
   void drw(PGraphics rbuf) {
+    if(anigo==1) if(frameCount%anifreq==0){
+      anifreq = int(random(aflo, afhi)); 
+      render();
+    }
     rbuf.image(img, x, y);
   }
 }
@@ -86,6 +96,18 @@ class SquiggleSet {
       inst.drw(rbuf);
     }
   }//end drw method
+
+  // Animate Method //
+  void animate(int ix, int go, int aflo, int afhi) {
+    for (int i=cset.size ()-1; i>=0; i--) {
+      Squiggle inst = cset.get(i);
+      if(inst.ix == ix){
+        inst.aflo = aflo;
+        inst.afhi = afhi;
+        inst.anigo = go;
+      }
+    }
+  }//end animate method
 
 
   //

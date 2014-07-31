@@ -1,4 +1,10 @@
 /*
+Change spt speed
+glow on spots rim
+Introduce barriers
+
+
+
 make class of spinners
 with osc
 

@@ -68,6 +68,7 @@ void setup() {
   meosc.plug(this, "setgravity", "/setgravity");
 
   meosc.plug(squigglez, "mk", "/mksqig");
+  meosc.plug(squigglez, "animate", "/anisqig");
 
 }
 
