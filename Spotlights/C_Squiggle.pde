@@ -1,7 +1,8 @@
 class Squiggle {
-  int ix, w, h, density;
+  int ix, x, y, w, h, density;
   String cl;
 
+  int l, r, t, b, m, c;
   PGraphics buf;
   PImage img;
   float curvePointX = 0; 
@@ -9,18 +10,20 @@ class Squiggle {
   float x, y;
   float x1, y1, addx, addy;
 
-  Squiggle(int aix, int aw, int ah, int adensity, String acl) {
+  Squiggle(int aix, int ax, int ay, int aw, int ah, int adensity, String acl) {
     ix = aix;
+    x = ax;
+    y = ay;
     w = aw;
     h = ah;
     density = adensity;
     cl = acl;
 
     buf = createGraphics(w+10, h+10, P3D);
-    x = w/2.0;
-    y = h/2.0;
-    x1 = x;
-    y1 = y;
+    m = w/2.0;
+    c = h/2.0;
+    x1 = m;
+    y1 = c;
   }
 
   void render() {
