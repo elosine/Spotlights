@@ -17,13 +17,17 @@ int h = 600;
 float gravityx = 0.0;
 float gravityy = 0.0;
 
-int maskalpha = 255;
+int maskalpha = 11;
 
 OscP5 meosc;
 NetAddress sc;
 
 PImage img;
-boolean render = false;
+boolean gosqig = false;
+int[] sqigA = {
+  100, 50, 50, 50, 50, 14
+};
+String sqigClTemp = "orange";
 
 
 
@@ -35,8 +39,8 @@ void setup() {
   meosc = new OscP5(this, 1231);
   sc = new NetAddress("127.0.0.1", 57120);
 
-  bglayer = createGraphics(w, h, P3D);
-  masklayer = createGraphics(w, h, P2D);
+  bglayer = createGraphics(w, h, JAVA2D);
+  masklayer = createGraphics(w, h, JAVA2D);
 
   Fisica.init(this);
   mundo = new FWorld();
@@ -69,10 +73,10 @@ void setup() {
   meosc.plug(setOSticks, "rmv", "/rmvstick");
 
   meosc.plug(this, "setgravity", "/setgravity");
-  
-  squigglez.mk(0, 200, 200, 200, 200, 14, "mint");
 
-  
+  //meosc.plug(this, "mksqig", "/mksqig"); 
+  meosc.plug(squigglez, "mk", "/mksqig");
+
 }
 
 
@@ -108,33 +112,39 @@ void draw() {
   spots.drwTopLayer();
   setOSticks.drwset();
   //squigglez.drw(g); //'g' is global variable to refer to the man PApplet's PGraphics
+
+
+  if (gosqig) {
+    gosqig = false;
+    squigglez.mk(sqigA[0], sqigA[1], sqigA[2], sqigA[3], sqigA[4], sqigA[5], sqigClTemp);
+  }
   //
   //
   //
 }//End Draw
 /*
 void mi() {
-  glowl.beginDraw();
-  glowl.background(0);
-  glowl.noStroke();
-  glowl.fill(80, 255, 0);
-  glowl.pushMatrix();
-
-  glowl.rectMode(CENTER);
-  //ellipseMode(CENTER);
-  glowl. translate(300, 300);
-  glowl.rotate(radians(spdeg));
-  glowl.rect(0, 0, 140, 16);
-  spdeg+=35;
-  glow(3, 1, glowl);
-
-  glowl.popMatrix();
-  glowl.endDraw();
-
-
-  img = glowl.get(0, 0, glowl.width, glowl.height);
-}
-*/
+ glowl.beginDraw();
+ glowl.background(0);
+ glowl.noStroke();
+ glowl.fill(80, 255, 0);
+ glowl.pushMatrix();
+ 
+ glowl.rectMode(CENTER);
+ //ellipseMode(CENTER);
+ glowl. translate(300, 300);
+ glowl.rotate(radians(spdeg));
+ glowl.rect(0, 0, 140, 16);
+ spdeg+=35;
+ glow(3, 1, glowl);
+ 
+ glowl.popMatrix();
+ glowl.endDraw();
+ 
+ 
+ img = glowl.get(0, 0, glowl.width, glowl.height);
+ }
+ */
 
 
 void contactResult(FContactResult c) {
@@ -167,5 +177,18 @@ void oscEvent(OscMessage theOscMessage) {
     println("### addrpattern\t"+theOscMessage.addrPattern());
     println("### typetag\t"+theOscMessage.typetag());
   }
+}
+
+
+void mksqig(int ix, int x, int y, int w, int h, int d, String cl) {
+  sqigA[0] = ix;
+  sqigA[1] = x;
+  sqigA[2] = y;
+  sqigA[3] = w;
+  sqigA[4] = h;
+  sqigA[5] = d;
+  sqigClTemp = cl;
+
+  gosqig = true;
 }
 

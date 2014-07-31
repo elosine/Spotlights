@@ -21,16 +21,19 @@ class Squiggle {
     density = adensity;
     cl = acl;
 
-    buf = createGraphics(w+10, h+10, P3D);
+    buf = createGraphics(w+10, h+10, JAVA2D);
+   // buf = createGraphics(width, height, P3D);
     m = w/2.0;
     c = h/2.0;
     x1 = m;
     y1 = c;
+    
+    render();
   }
 
   void render() {
     buf.beginDraw();
-    buf.background(0);
+   // buf.background(0);
     buf.noFill();
     buf.strokeWeight(2);
     buf.stroke(clr.get(cl));
@@ -65,6 +68,7 @@ class Squiggle {
     buf.endDraw();
 
     img = buf.get(0, 0, buf.width, buf.height);
+   // bglayer.blend(img, 0, 0, 33, 100, 67, 0, 33, 100, ADD); 
   }
   void drw(PGraphics rbuf) {
     rbuf.image(img, x, y);
@@ -77,8 +81,6 @@ class SquiggleSet {
   // Make Instance Method //
   void mk(int ix, int x, int y, int w, int h, int dens, String cl) {
     cset.add( new Squiggle(ix, x, y, w, h, dens, cl) );
-    Squiggle inst = cset.get(cset.size()-1);
-    inst.render();
   } //end mk method
 
  // Draw Set Method //
