@@ -1,15 +1,18 @@
-// DECLARE/INITIALIZE CLASS SET
-SquiggleSet squigglez = new SquiggleSet();
-
 class Squiggle {
   int ix, x, y, w, h, density;
   String cl;
 
+<<<<<<< HEAD
   float l, r, t, b, m, c;
+=======
+  int l, r, t, b, m, c;
+  PGraphics buf;
+>>>>>>> parent of 2f70ecd... Squiggle as classset
   PImage img;
   PG
   float curvePointX = 0; 
   float curvePointY = 0;
+  float x, y;
   float x1, y1, addx, addy;
 
   Squiggle(int aix, int ax, int ay, int aw, int ah, int adensity, String acl) {
@@ -34,6 +37,7 @@ class Squiggle {
   }
 
   void render() {
+<<<<<<< HEAD
     tempbuf.beginDraw();
     tempbuf.background(0);
     tempbuf.noFill();
@@ -46,12 +50,32 @@ class Squiggle {
       tempbuf.curveVertex(x1, y1);
       for (int i = 0; i < int (random (3, 13)); i++) {
         if (x1<m) addx = random(w/2);
+=======
+    buf.beginDraw();
+    buf.background(0);
+    buf.noFill();
+    buf.strokeWeight(2);
+    buf.stroke(clr.get(cl));
+
+    for (int j=0; j<int(random(2, density+2)); j++) {
+      buf.beginShape();
+      buf.curveVertex(x1, y1);
+      buf.curveVertex(x1, y1);
+      for (int i = 0; i < int(random(3, 13)); i++) {
+        if (x1<x) addx = random(w/2);
+>>>>>>> parent of 2f70ecd... Squiggle as classset
         else addx = random( (w/2) * -1 );
-        if (y1<c) addy = random(h/2);
+        if (y1<y) addy = random(h/2);
         else addy = random( -h/2 );
+<<<<<<< HEAD
         curvePointX = constrain( x1 + addx, m-(w/2.0)+10, m+(w/2.0) );
         curvePointY = constrain( y1 + addy, c-(h/2.0)+10, c+(h/2.0) );
         tempbuf.curveVertex(curvePointX, curvePointY);
+=======
+        curvePointX = constrain( x1 + addx, x-(w/2.0)+10, x+(w/2.0) );
+        curvePointY = constrain( y1 + addy, y-(h/2.0)+10, y+(h/2.0) );
+        buf.curveVertex(curvePointX, curvePointY);
+>>>>>>> parent of 2f70ecd... Squiggle as classset
       }
       tempbuf.curveVertex(curvePointX, curvePointY);
       tempbuf.endShape();
@@ -71,6 +95,7 @@ class Squiggle {
 
    // img = tempbuf.get(int(l), int(t), w, h);
   }
+<<<<<<< HEAD
   
   void drw(PGraphics rbuf) {
    // rbuf.image(img, x, y);
@@ -131,3 +156,10 @@ class SquiggleSet {
   //
 }
 
+=======
+  void drw() {
+    image(img, 400, 200);
+  }
+}
+
+>>>>>>> parent of 2f70ecd... Squiggle as classset

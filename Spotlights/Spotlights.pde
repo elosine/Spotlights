@@ -7,10 +7,15 @@ FWorld mundo;
 
 PGraphics bglayer;
 PGraphics masklayer;
+<<<<<<< HEAD
 PGraphics tempbuf;
+=======
+PGraphics glowl;
+>>>>>>> parent of 2f70ecd... Squiggle as classset
 
 float frmrate = 24;
 float secperframe = 1.0/frmrate;
+
 
 int w = 1066;
 int h = 600;
@@ -22,6 +27,8 @@ int maskalpha = 11;
 
 OscP5 meosc;
 NetAddress sc;
+
+int spdeg = 0;
 
 PImage img;
 boolean render = false;
@@ -38,7 +45,11 @@ void setup() {
 
   bglayer = createGraphics(w, h, P3D);
   masklayer = createGraphics(w, h, P2D);
+<<<<<<< HEAD
   tempbuf = createGraphics(w, h, P3D);
+=======
+  glowl = createGraphics(w, h, P3D);
+>>>>>>> parent of 2f70ecd... Squiggle as classset
 
   Fisica.init(this);
   mundo = new FWorld();
@@ -71,13 +82,20 @@ void setup() {
   meosc.plug(setOSticks, "rmv", "/rmvstick");
 
   meosc.plug(this, "setgravity", "/setgravity");
+<<<<<<< HEAD
   
   meosc.plug(squigglez, "mk", "/mksquig");
   meosc.plug(squigglez, "render", "/rndsquig");
   meosc.plug(squigglez, "rmv", "/rmvsquig");
   
+=======
+>>>>>>> parent of 2f70ecd... Squiggle as classset
 
-  
+  meosc.plug(glowstickz, "mk", "/mkglowstick");
+  meosc.plug(glowstickz, "rmv", "/rmvglowstick");
+  meosc.plug(glowstickz, "rmvall", "/rmvallglowstick");
+  meosc.plug(glowstickz, "update", "/updategs");
+  mi();
 }
 
 
@@ -88,36 +106,39 @@ void draw() {
 
 
   bglayer.beginDraw(); //////////////////////////////
+  //bglayer.background(0, 3);
   bglayer.fill(0, 0, 0, 170);
   bglayer.rectMode(CORNER);
   bglayer.rect(0, 0, width, height);
 
-  squigglez.drw(bglayer);
+
+  bglayer.image(img, 0, 0);
   spots.drwbglayer(); //gives pixel ct
+
   bglayer.endDraw(); ///////////////////////////////
 
-
   masklayer.beginDraw(); //////////////////////////////
+
   masklayer.background(maskalpha, maskalpha, maskalpha);
+  //masklayer.fill(255,255,255);
 
   mundo.step();
   mundo.draw(masklayer);
+  //glow(3,1,masklayer);
   masklayer.endDraw(); ////////////////////////////
-
 
   bglayer.mask(masklayer);
 
   image(bglayer, 0, 0);
 
+
+  glowstickz.drw();
+
   //TOP LAYER ////////////////////////////////////
   spots.drwTopLayer();
   setOSticks.drwset();
-  //squigglez.drw(g); //'g' is global variable to refer to the man PApplet's PGraphics
-  //
-  //
-  //
 }//End Draw
-/*
+
 void mi() {
   glowl.beginDraw();
   glowl.background(0);
@@ -139,7 +160,9 @@ void mi() {
 
   img = glowl.get(0, 0, glowl.width, glowl.height);
 }
-*/
+void keyPressed(){
+  mi();
+}
 
 
 void contactResult(FContactResult c) {
@@ -158,8 +181,6 @@ void contactResult(FContactResult c) {
     }
   }
 }
-
-
 
 void setgravity(float gx, float gy) {
   mundo.setGravity(gx, gy);
