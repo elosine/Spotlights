@@ -22,27 +22,27 @@ class Squiggle {
     cl = acl;
 
     buf = createGraphics(w+10, h+10, JAVA2D);
-   // buf = createGraphics(width, height, P3D);
     m = w/2.0;
     c = h/2.0;
     x1 = m;
     y1 = c;
-    
+
     render();
   }
 
   void render() {
     buf.beginDraw();
-   // buf.background(0);
+    buf.smooth();
+   // buf.background(0, 3);
     buf.noFill();
     buf.strokeWeight(2);
     buf.stroke(clr.get(cl));
 
-    for (int j=0; j<int(random(2, density+2)); j++) {
+    for (int j=0; j<int (random (2, density+2)); j++) {
       buf.beginShape();
       buf.curveVertex(x1, y1);
       buf.curveVertex(x1, y1);
-      for (int i = 0; i < int(random(3, 13)); i++) {
+      for (int i = 0; i < int (random (3, 13)); i++) {
         if (x1<m) addx = random(w/2);
         else addx = random( (w/2) * -1 );
         if (y1<c) addy = random(h/2);
@@ -68,7 +68,6 @@ class Squiggle {
     buf.endDraw();
 
     img = buf.get(0, 0, buf.width, buf.height);
-   // bglayer.blend(img, 0, 0, 33, 100, 67, 0, 33, 100, ADD); 
   }
   void drw(PGraphics rbuf) {
     rbuf.image(img, x, y);
@@ -82,15 +81,24 @@ class SquiggleSet {
   void mk(int ix, int x, int y, int w, int h, int dens, String cl) {
     cset.add( new Squiggle(ix, x, y, w, h, dens, cl) );
   } //end mk method
-
- // Draw Set Method //
+/*
+  // Draw Set Method //
   void drw(PGraphics rbuf) {
     for (int i=cset.size ()-1; i>=0; i--) {
       Squiggle inst = cset.get(i);
       inst.drw(rbuf);
     }
   }//end drw method
-  
+*/
+  // Draw Set Method //
+  void drw(PGraphics rbuf) {
+    for (int i=0; i<cset.size(); i++) {
+      Squiggle inst = cset.get(i);
+      inst.drw(rbuf);
+    }
+  }//end drw method
+
   //
   //
 }
+

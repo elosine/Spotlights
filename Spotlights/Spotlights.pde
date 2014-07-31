@@ -22,25 +22,18 @@ int maskalpha = 11;
 OscP5 meosc;
 NetAddress sc;
 
-PImage img;
-boolean gosqig = false;
-int[] sqigA = {
-  100, 50, 50, 50, 50, 14
-};
-String sqigClTemp = "orange";
-
 
 
 void setup() {
 
-  size(w, h, P3D);
+  size(w, h, P2D);
   frameRate(frmrate);
 
   meosc = new OscP5(this, 1231);
   sc = new NetAddress("127.0.0.1", 57120);
 
-  bglayer = createGraphics(w, h, JAVA2D);
-  masklayer = createGraphics(w, h, JAVA2D);
+  bglayer = createGraphics(w, h, P3D);
+  masklayer = createGraphics(w, h, P2D);
 
   Fisica.init(this);
   mundo = new FWorld();
@@ -74,7 +67,6 @@ void setup() {
 
   meosc.plug(this, "setgravity", "/setgravity");
 
-  //meosc.plug(this, "mksqig", "/mksqig"); 
   meosc.plug(squigglez, "mk", "/mksqig");
 
 }
@@ -114,10 +106,6 @@ void draw() {
   //squigglez.drw(g); //'g' is global variable to refer to the man PApplet's PGraphics
 
 
-  if (gosqig) {
-    gosqig = false;
-    squigglez.mk(sqigA[0], sqigA[1], sqigA[2], sqigA[3], sqigA[4], sqigA[5], sqigClTemp);
-  }
   //
   //
   //
@@ -180,15 +168,4 @@ void oscEvent(OscMessage theOscMessage) {
 }
 
 
-void mksqig(int ix, int x, int y, int w, int h, int d, String cl) {
-  sqigA[0] = ix;
-  sqigA[1] = x;
-  sqigA[2] = y;
-  sqigA[3] = w;
-  sqigA[4] = h;
-  sqigA[5] = d;
-  sqigClTemp = cl;
-
-  gosqig = true;
-}
 
