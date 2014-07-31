@@ -33,7 +33,6 @@ class Squiggle {
   void render() {
     buf.beginDraw();
     buf.smooth();
-   // buf.background(0, 3);
     buf.noFill();
     buf.strokeWeight(2);
     buf.stroke(clr.get(cl));
@@ -60,11 +59,9 @@ class Squiggle {
 
     buf.fill(0);
     buf.noStroke();
-    // buf.ellipse(w/2, h/2, 30, 30);
     buf.noFill();
     buf.stroke(0, 255, 0);
     buf.rectMode(CENTER);
-    // buf.rect(w/2, h/2, w, h);
     buf.endDraw();
 
     img = buf.get(0, 0, buf.width, buf.height);
@@ -81,7 +78,7 @@ class SquiggleSet {
   void mk(int ix, int x, int y, int w, int h, int dens, String cl) {
     cset.add( new Squiggle(ix, x, y, w, h, dens, cl) );
   } //end mk method
-/*
+
   // Draw Set Method //
   void drw(PGraphics rbuf) {
     for (int i=cset.size ()-1; i>=0; i--) {
@@ -89,14 +86,7 @@ class SquiggleSet {
       inst.drw(rbuf);
     }
   }//end drw method
-*/
-  // Draw Set Method //
-  void drw(PGraphics rbuf) {
-    for (int i=0; i<cset.size(); i++) {
-      Squiggle inst = cset.get(i);
-      inst.drw(rbuf);
-    }
-  }//end drw method
+
 
   //
   //

@@ -29,8 +29,6 @@ void blur(int dd, PGraphics pg) {
     for (int x=0; x<pg.width; x++) for (int y=0; y<pg.height; y++) {
 
       int p = y*pg.width + x;
-      // int pxcl = pg.pixels[p]&0xFF;
-
       int e = x >= pg.width-d ? 0 : d;
       int w = x >= d ? -d : 0;
       int n = y >= d ? -pg.width*d : 0;
@@ -40,10 +38,12 @@ void blur(int dd, PGraphics pg) {
       int b = ( b(pg.pixels[p+w]) + b(pg.pixels[p+e]) + b(pg.pixels[p+n]) + b(pg.pixels[p+s]) ) >> 2;
       px[p] = 0xff000000 + (r<<16) | (g<<8) | b;
 
+      //Turns black pixels transparent ///
       int tr = r(px[p]);
       int tg = g(px[p]);
       int tb = b(px[p]);
       if (tr==0 && tg==0 && tb==0) px[p] = px[p] &= 0x00FFFFFF;
+      /// ///
     }
     arrayCopy(px, pg.pixels);
   }
@@ -59,6 +59,7 @@ void mix(int[] px, int n, PGraphics pg) {
     int tr = r(pg.pixels[i]);
     int tg = g(pg.pixels[i]);
     int tb = b(pg.pixels[i]);
+     /// Turns black pixels transparent ///
     if (tr==0 && tg==0 && tb==0) pg.pixels[i] = pg.pixels[i] &= 0x00FFFFFF;
   }
 }

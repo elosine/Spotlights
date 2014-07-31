@@ -76,8 +76,6 @@ void setup() {
 void draw() {
   background(0);
 
-
-
   bglayer.beginDraw(); //////////////////////////////
   bglayer.fill(0, 0, 0, 170);
   bglayer.rectMode(CORNER);
@@ -110,29 +108,7 @@ void draw() {
   //
   //
 }//End Draw
-/*
-void mi() {
- glowl.beginDraw();
- glowl.background(0);
- glowl.noStroke();
- glowl.fill(80, 255, 0);
- glowl.pushMatrix();
- 
- glowl.rectMode(CENTER);
- //ellipseMode(CENTER);
- glowl. translate(300, 300);
- glowl.rotate(radians(spdeg));
- glowl.rect(0, 0, 140, 16);
- spdeg+=35;
- glow(3, 1, glowl);
- 
- glowl.popMatrix();
- glowl.endDraw();
- 
- 
- img = glowl.get(0, 0, glowl.width, glowl.height);
- }
- */
+
 
 
 void contactResult(FContactResult c) {
