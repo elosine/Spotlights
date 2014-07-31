@@ -1,4 +1,9 @@
 /*
+Animate Squiggles
+
+
+
+
 make class of spinners
 with osc
 

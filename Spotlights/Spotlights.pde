@@ -7,6 +7,7 @@ FWorld mundo;
 
 PGraphics bglayer;
 PGraphics masklayer;
+PGraphics tempbuf;
 
 float frmrate = 24;
 float secperframe = 1.0/frmrate;
@@ -17,7 +18,7 @@ int h = 600;
 float gravityx = 0.0;
 float gravityy = 0.0;
 
-int maskalpha = 255;
+int maskalpha = 11;
 
 OscP5 meosc;
 NetAddress sc;
@@ -37,6 +38,7 @@ void setup() {
 
   bglayer = createGraphics(w, h, P3D);
   masklayer = createGraphics(w, h, P2D);
+  tempbuf = createGraphics(w, h, P3D);
 
   Fisica.init(this);
   mundo = new FWorld();
@@ -70,7 +72,10 @@ void setup() {
 
   meosc.plug(this, "setgravity", "/setgravity");
   
-  squigglez.mk(0, 200, 200, 200, 200, 14, "mint");
+  meosc.plug(squigglez, "mk", "/mksquig");
+  meosc.plug(squigglez, "render", "/rndsquig");
+  meosc.plug(squigglez, "rmv", "/rmvsquig");
+  
 
   
 }
