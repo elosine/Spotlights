@@ -34,7 +34,8 @@ class Spotlight {
   String name;
   float r;
   float gotogotime = 0.0;
-  float iris = 0.5;
+  float iris = 0.25;
+  float dynmaskdia;
 
   //Constructor 1
   Spotlight(int aix, float astartx, float astarty, float asize, String aclrname) {
@@ -46,6 +47,7 @@ class Spotlight {
     name = "spt" + str(ix);
     //println(name);
     r = size/2.0;
+    dynmaskdia = ((1.0 - iris)/2.0)*size;
 
     sl = new FCircle(size);
     sl.setNoStroke();
@@ -71,6 +73,7 @@ class Spotlight {
     vely = avely;
     name = "spt" + str(ix);
     r = size/2.0;
+    dynmaskdia = ((1.0 - iris)/2.0)*size;
 
     sl = new FCircle(size);
     sl.setNoStroke();
@@ -172,24 +175,23 @@ class Spotlight {
       sndy.add(ynorm);
       meosc.send(sndy, sc);
     }
+    
 
     stroke( clr.get(clrname) );
     strokeWeight(bdrwt);
     ellipseMode(CENTER);
     ellipse(sl.getX(), sl.getY(), size, size);
-    
+
+/*  USE DIFFERENT SIZE FOR NOW TO DENOTE DYNAMICS AND PUT 'LARGEST SIZE' IN INSTRUCTIONS
     //IRIS EFFECT OVERLAY
     noFill();
     ellipseMode(CENTER);
-    stroke( clr.getAlpha("slate", 100) );
-   strokeWeight(20);
-   // strokeWeight(3);
-    ellipse(sl.getX(), sl.getY(), size*iris+20, size*iris+20);
-    
-    
-    stroke( clr.get("red" ));
-   strokeWeight(2);
-    ellipse(sl.getX(), sl.getY(), size*iris, size*iris);
+    stroke( 20 );
+    strokeWeight( dynmaskdia );
+    ellipse(sl.getX(), sl.getY(), (size*iris)+dynmaskdia, (size*iris)+dynmaskdia);
+    */
+
+
 
     //
   } //End Method drwshadow

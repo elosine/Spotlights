@@ -22,6 +22,10 @@ int maskalpha = 11;
 OscP5 meosc;
 NetAddress sc;
 
+FBox safetyedgeL, safetyedgeR, safetyedgeT, safetyedgeB;
+
+
+
 
 
 void setup() {
@@ -43,7 +47,7 @@ void setup() {
   mundo.top.setName("edg_t");
   mundo.bottom.setName("edg_b");
   mundo.left.setName("edg_l");
-  mundo.right.setName("edg_r");
+  mundo.right.setName("edg_r");fnkes`
 
   meosc.plug(spots, "mkinst", "/mkspot");
   meosc.plug(spots, "rmv", "/rmvspot");
@@ -70,7 +74,6 @@ void setup() {
 
   meosc.plug(squigglez, "mk", "/mksqig");
   meosc.plug(squigglez, "animate", "/anisqig");
-
 }
 
 
@@ -104,6 +107,13 @@ void draw() {
   spots.drwTopLayer();
   setOSticks.drwset();
   //squigglez.drw(g); //'g' is global variable to refer to the man PApplet's PGraphics
+
+
+  /*
+if(millis()>0 && millis()<30000000){
+   saveFrame("render-###.tif");
+   delay(100);
+   */
 
 
   //
@@ -144,6 +154,5 @@ void oscEvent(OscMessage theOscMessage) {
     println("### typetag\t"+theOscMessage.typetag());
   }
 }
-
 
 
