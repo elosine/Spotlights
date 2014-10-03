@@ -34,8 +34,9 @@ class Spotlight {
   String name;
   float r;
   float gotogotime = 0.0;
+  float iris = 0.5;
 
-  //Constructor
+  //Constructor 1
   Spotlight(int aix, float astartx, float astarty, float asize, String aclrname) {
     ix = aix;
     startx = astartx;
@@ -43,7 +44,7 @@ class Spotlight {
     size = asize;
     clrname = aclrname;
     name = "spt" + str(ix);
-    println(name);
+    //println(name);
     r = size/2.0;
 
     sl = new FCircle(size);
@@ -55,7 +56,32 @@ class Spotlight {
     sl.setDamping(damping);
     sl.setName(name);
     mundo.add(sl);
-  } //End Constructor
+  } //End Constructor 1
+
+
+
+  //Constructor 2 - vely
+  Spotlight(int aix, float astartx, float astarty, float asize, String aclrname, float avelx, float avely) {
+    ix = aix;
+    startx = astartx;
+    starty = astarty;
+    size = asize;
+    clrname = aclrname;
+    velx = avelx;
+    vely = avely;
+    name = "spt" + str(ix);
+    r = size/2.0;
+
+    sl = new FCircle(size);
+    sl.setNoStroke();
+    sl.setFill(255);  //needs to be white because it is masking
+    sl.setPosition(startx, starty);
+    sl.setVelocity(velx, vely);
+    sl.setRestitution(bounce);
+    sl.setDamping(damping);
+    sl.setName(name);
+    mundo.add(sl);
+  } //End Constructor 2 - vely
 
 
   void drwShadow() {
@@ -151,6 +177,19 @@ class Spotlight {
     strokeWeight(bdrwt);
     ellipseMode(CENTER);
     ellipse(sl.getX(), sl.getY(), size, size);
+    
+    //IRIS EFFECT OVERLAY
+    noFill();
+    ellipseMode(CENTER);
+    stroke( clr.getAlpha("slate", 100) );
+   strokeWeight(20);
+   // strokeWeight(3);
+    ellipse(sl.getX(), sl.getY(), size*iris+20, size*iris+20);
+    
+    
+    stroke( clr.get("red" ));
+   strokeWeight(2);
+    ellipse(sl.getX(), sl.getY(), size*iris, size*iris);
 
     //
   } //End Method drwshadow
@@ -230,8 +269,8 @@ class SpotlightSet {
   ArrayList<Spotlight> clset = new ArrayList<Spotlight>();
 
   // Make Instance Method //
-  void mkinst(int ix, float startx, float starty, float size, String clrname) {
-    clset.add(new Spotlight(ix, startx, starty, size, clrname));
+  void mkinst(int ix, float startx, float starty, float size, String clrname, float velx, float vely) {
+    clset.add(new Spotlight(ix, startx, starty, size, clrname, velx, vely));
   } // End mkinst Method
 
   void drwTopLayer() {
@@ -374,6 +413,23 @@ class SpotlightSet {
       Spotlight inst = clset.get(i);
       if (inst.ix == ix) {
         inst.sl.setVelocity(x, y);
+        break;
+      }
+    }
+  } //End method
+
+
+  void adjvelocity(int ix, float x, float y) {
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      float xdirtemp = 1.0;
+      float ydirtemp = 1.0;
+      if (inst.ix == ix) {
+        if (inst.sl.getVelocityX() >= 0) xdirtemp = 1.0; 
+        else xdirtemp = -1.0;
+        if (inst.sl.getVelocityY() >= 0) ydirtemp = 1.0; 
+        else ydirtemp = -1.0;
+        inst.sl.adjustVelocity(x*xdirtemp, y*ydirtemp);
         break;
       }
     }
