@@ -89,6 +89,16 @@ class SquiggleSet {
     cset.add( new Squiggle(ix, x, y, w, h, dens, cl) );
   } //end mk method
 
+  void rmv(int ix) {
+    for (int i=cset.size ()-1; i>=0; i--) {
+      Squiggle inst = cset.get(i);
+      if (inst.ix == ix) {
+        cset.remove(i);
+        break;
+      }
+    }
+  } //End rmv method
+
   // Draw Set Method //
   void drw(PGraphics rbuf) {
     for (int i=cset.size ()-1; i>=0; i--) {

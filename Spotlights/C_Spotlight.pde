@@ -22,8 +22,9 @@ class Spotlight {
   boolean sawon = false;
 
   float spinnerdeg = 0.0;
-  float spinnervel = 0;
+  float spinnervel = 50;
   float spinneraccl = -1.2;
+  boolean spinner = false;
 
   PVector gotocurrloc;
   PVector gototarget;
@@ -91,28 +92,38 @@ class Spotlight {
 
     //Size Mod
     if (sawon) {
-      if (size>sawmax) {
-        size = sawmin;
+      if ( sl.getX() > 75 && sl.getX() < width-75 && sl.getY() > 75 && sl.getY() < height-75) {
+        if (sawmax>sawmin) {
+          if (size>=sawmax) {
+            size = sawmin;
+          }
+        } else {
+          if (size<sawmax) {
+            size = sawmin;
+          }
+        }
+        // if (frameCount%4 == 0) {
+        size = size + sawchgperframe;
+        sl.setSize(size);
+        // }
       }
-      size = size + sawchgperframe;
-      sl.setSize(size);
     }
 
-    /*
-    pushMatrix();
-     rectMode(CENTER);
-     fill(clr.get(clrname));
-     noStroke();
-     translate(sl.getX(), sl.getY());
-     rotate(radians(spinnerdeg));
-     rect(0, 0, 2, size);
-     rotate(radians(90));
-     rect(0, 0, 2, size);
-     popMatrix();
-     
-     spinnervel = constrain( (spinnervel += spinneraccl), 0, 50);
-     spinnerdeg += spinnervel;
-     */
+    if (spinner) {
+      pushMatrix();
+      rectMode(CENTER);
+      fill(clr.get(clrname));
+      noStroke();
+      translate(sl.getX(), sl.getY());
+      rotate(radians(spinnerdeg));
+      rect(0, 0, 2, size);
+      rotate(radians(90));
+      rect(0, 0, 2, size);
+      popMatrix();
+
+     // spinnervel = constrain( (spinnervel += spinneraccl), 0, 50);
+      spinnerdeg += spinnervel;
+    }
 
 
     //FOR BLINK TEXTURE
@@ -175,21 +186,21 @@ class Spotlight {
       sndy.add(ynorm);
       meosc.send(sndy, sc);
     }
-    
+
 
     stroke( clr.get(clrname) );
     strokeWeight(bdrwt);
     ellipseMode(CENTER);
     ellipse(sl.getX(), sl.getY(), size, size);
 
-/*  USE DIFFERENT SIZE FOR NOW TO DENOTE DYNAMICS AND PUT 'LARGEST SIZE' IN INSTRUCTIONS
-    //IRIS EFFECT OVERLAY
-    noFill();
-    ellipseMode(CENTER);
-    stroke( 20 );
-    strokeWeight( dynmaskdia );
-    ellipse(sl.getX(), sl.getY(), (size*iris)+dynmaskdia, (size*iris)+dynmaskdia);
-    */
+    /*  USE DIFFERENT SIZE FOR NOW TO DENOTE DYNAMICS AND PUT 'LARGEST SIZE' IN INSTRUCTIONS
+     //IRIS EFFECT OVERLAY
+     noFill();
+     ellipseMode(CENTER);
+     stroke( 20 );
+     strokeWeight( dynmaskdia );
+     ellipse(sl.getX(), sl.getY(), (size*iris)+dynmaskdia, (size*iris)+dynmaskdia);
+     */
 
 
 
@@ -310,6 +321,20 @@ class SpotlightSet {
       }
     }
   } //End halt method
+
+  void spin(int ix, int on) {
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      if (inst.ix == ix) {
+        if (on == 1) {
+          inst.spinner = true;
+        } else {
+          inst.spinner = false;
+        }
+        break;
+      }
+    }
+  } //End spin method
 
   void haltall(int aonoff) {
     for (int i=clset.size ()-1; i>=0; i--) {

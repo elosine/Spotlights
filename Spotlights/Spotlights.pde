@@ -31,7 +31,7 @@ FBox safetyedgeL, safetyedgeR, safetyedgeT, safetyedgeB;
 void setup() {
 
   size(w, h, P2D);
-  frameRate(frmrate);
+ // frameRate(frmrate);
 
   meosc = new OscP5(this, 1231);
   sc = new NetAddress("127.0.0.1", 57120);
@@ -47,7 +47,7 @@ void setup() {
   mundo.top.setName("edg_t");
   mundo.bottom.setName("edg_b");
   mundo.left.setName("edg_l");
-  mundo.right.setName("edg_r");fnkes`
+  mundo.right.setName("edg_r");
 
   meosc.plug(spots, "mkinst", "/mkspot");
   meosc.plug(spots, "rmv", "/rmvspot");
@@ -66,6 +66,7 @@ void setup() {
   meosc.plug(spots, "setbounce", "/setbounce");
   meosc.plug(spots, "go", "/go");
   meosc.plug(spots, "goall", "/goall");
+  meosc.plug(spots, "spin", "/spin");
 
   meosc.plug(setOSticks, "mk", "/mkstick");
   meosc.plug(setOSticks, "rmv", "/rmvstick");
@@ -74,6 +75,9 @@ void setup() {
 
   meosc.plug(squigglez, "mk", "/mksqig");
   meosc.plug(squigglez, "animate", "/anisqig");
+  meosc.plug(squigglez, "rmv", "/rmvsqig");
+  
+  
 }
 
 
