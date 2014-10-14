@@ -210,7 +210,9 @@ t.sendMsg("/rmvspot", 5);
 /*5*/ t.sendMsg("/setvel", /*ix*/5, /*velx*/0.0, /*vely*/550.0);
 )
 
-
+//Arcs & Lines
+t.sendMsg("/mkal", 1, 106, 100, 1, 18);
+t.sendMsg("/rmval", 1);
 
 
 

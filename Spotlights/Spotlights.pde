@@ -24,6 +24,12 @@ NetAddress sc;
 
 FBox safetyedgeL, safetyedgeR, safetyedgeT, safetyedgeB;
 
+ArcsAndLinesDrawz aldrwset;
+
+ArcsAndLines al;
+
+
+
 
 
 
@@ -31,7 +37,10 @@ FBox safetyedgeL, safetyedgeR, safetyedgeT, safetyedgeB;
 void setup() {
 
   size(w, h, P2D);
- // frameRate(frmrate);
+  // frameRate(frmrate);
+
+  al = new ArcsAndLines(65, 4);
+
 
   meosc = new OscP5(this, 1231);
   sc = new NetAddress("127.0.0.1", 57120);
@@ -48,6 +57,9 @@ void setup() {
   mundo.bottom.setName("edg_b");
   mundo.left.setName("edg_l");
   mundo.right.setName("edg_r");
+
+
+  aldrwset = new ArcsAndLinesDrawz();
 
   meosc.plug(spots, "mkinst", "/mkspot");
   meosc.plug(spots, "rmv", "/rmvspot");
@@ -76,8 +88,9 @@ void setup() {
   meosc.plug(squigglez, "mk", "/mksqig");
   meosc.plug(squigglez, "animate", "/anisqig");
   meosc.plug(squigglez, "rmv", "/rmvsqig");
-  
-  
+
+  meosc.plug(aldrwset, "mk", "/mkal");
+  meosc.plug(aldrwset, "rmv", "/rmval");
 }
 
 
@@ -91,6 +104,7 @@ void draw() {
   bglayer.rect(0, 0, width, height);
 
   squigglez.drw(bglayer);
+  aldrwset.drw(bglayer);
   spots.drwbglayer(); //gives pixel ct
   bglayer.endDraw(); ///////////////////////////////
 
@@ -159,4 +173,86 @@ void oscEvent(OscMessage theOscMessage) {
   }
 }
 
+
+
+class CrookedLine {
+  int x1, y1, x2, y2, numpts;
+  float w;
+  PVector start, dir, end, pp1;
+  PVector[] pts;
+  float[] segs;
+  PGraphics b;
+
+
+  CrookedLine(PGraphics argb, int ax1, int ay1, int ax2, int ay2, int anumpts, float aw) {
+    b = argb;
+    x1 = ax1;
+    y1 = ay1;
+    x2 = ax2;
+    y2 = ay2;
+    numpts = anumpts;
+    w = aw;
+
+    start = new PVector(x1, y1);
+    dir = new PVector(x2, y2);
+    end = PVector.add(start, dir);
+    pts= new PVector[numpts];
+
+    pp1 = new PVector(dir.y, -dir.x);
+    pp1.normalize();
+    pp1.mult(w/2.0);
+
+    segs = new float[numpts];
+    for (int i=0; i<segs.length; i++) {
+      segs[i] = random(0.10, 0.9);
+    }
+    segs = sort(segs);
+
+    for (int i=0; i<numpts; i++) {
+      pts[i] = PVector.add( start, PVector.mult( dir, segs[i] ));
+      pts[i] = PVector.add( pts[i], PVector.mult( pp1, random(-1.0, 1.0) ) );
+    }
+  }
+
+  void drw(float locx, float locy, float deg) {
+    b.noFill();
+    b.pushMatrix();
+    b.translate(locx, locy);
+    b.rotate(radians(deg));
+    b.beginShape();
+    b.curveVertex(start.x, start.y);
+    b.curveVertex(start.x, start.y);
+    for (int i=0; i<pts.length; i++) {
+      b.curveVertex(pts[i].x, pts[i].y);
+    }
+    b.curveVertex(end.x, end.y);
+    b.curveVertex(end.x, end.y);
+    b.endShape();
+
+    b.popMatrix();
+  }
+}
+
+
+
+
+
+
+
+
+
+
+PVector[] dashed(int x1, int y1, int x2, int y2, int steps) {
+
+  PVector[] pts = new PVector[steps+2];
+  pts[0] = new PVector(x1, y1);
+  pts[pts.length-1] = new PVector(x2, y2);
+
+  for (int i = 1; i <= steps; i++) {
+    float x = lerp(x1, x2, i/float(steps)) ;
+    float y = lerp(y1, y2, i/float(steps));
+    pts[i] = new PVector(x, y);
+  }
+  return pts;
+}
 
