@@ -11,8 +11,8 @@ PGraphics masklayer;
 float frmrate = 24;
 float secperframe = 1.0/frmrate;
 
-int w = 1066;
-int h = 600;
+int w = 1280;
+int h = 720;
 
 float gravityx = 0.0;
 float gravityy = 0.0;

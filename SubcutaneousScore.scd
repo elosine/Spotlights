@@ -97,6 +97,7 @@
 
 )
 
+(
 ~mksptsR = Routine{ ~mksptsA.do({ |it| it.value; ~wt.wait }) };
 ~rmvsptsR = Routine{ ~rmvsptsA.do({ |it| it.value; ~wt.wait }) };
 ~ivelR = Routine{ ~ivelA.do({ |it| it.value; ~wt.wait }) };
@@ -105,6 +106,36 @@
 ~sawonR = Routine{ ~sawonA.do({ |it| it.value; ~wt.wait }) };
 ~sawoffR = Routine{ ~sawoffA.do({ |it| it.value; ~wt.wait }) };
 ~rszallR = Routine{ ~rszallA.do({ |it| it.value; ~wt.wait }) };
+
+
+ //A&L Cell locations
+~alY = [20, 100, 180, 260, 340, 420, 500];
+~alX = [20, 100, 180, 260, 340, 420, 500, 580, 660, 740, 820, 900, 980];
+ //make an array of all of the combinations
+~alLocA = Array.newClear(0);
+~alY.do({|it, ix| ~alX.do({|jt, jx| if(jx>=ix, {~alLocA = ~alLocA.add([it, jt])})})});
+
+//make an array of all of the combinations
+~alc = Array.fill(20, {|ix| ix+1});
+~alA = Array.newClear(0);
+~alc.do({|it| ~alc.do({|jt| if(jt>=it, {~alA = ~alA.add([it, jt])})})});
+
+//Array ~als will contain all of the arguments for making a Arcs & Lines cell
+~als = Array.newClear(0);
+~alLocA.do({ |it, ix|
+	~alLoc = ~alLocA.removeAt(rand(~alLocA.size));
+	~cell = ~alA.removeAt(rand(~alA.size));
+	~als = ~als.add([ix, ~alLoc[1], ~alLoc[0], ~cell[0], ~cell[1] ]);
+});
+
+~alRout = Task{
+	~als.do({ |it|
+		~argstemp = ~als.removeAt(rand(~als.size));
+		t.sendMsg("/mkal", ~argstemp[0], ~argstemp[1], ~argstemp[2], ~argstemp[3], ~argstemp[4]);
+		rand(1.5, 7).wait;
+	});
+};
+)
 
 
 
@@ -137,6 +168,12 @@
 ~sz1ixN = NumberBox().value_(1).action_({ |it| ~sz1ix=it.value.asInteger }).step_(1);
 ~sz1N = NumberBox().value_(120.0).action_({ |it| ~sz1=it.value });
 
+~mkalB = Button().states_([ ["Arcs & Lines", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.start });
+~pausealB = Button().states_([ ["Pause A & L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.pause });
+~resumealB = Button().states_([ ["Resume A & L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.resume });
+~stopalB = Button().states_([ ["Stop A & L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.stop; ~alRout.reset });
+
+
 
 w = Window.new(bounds:Rect(20,1000,300,600)).layout_(
 	    VLayout (
@@ -147,6 +184,7 @@ w = Window.new(bounds:Rect(20,1000,300,600)).layout_(
 		HLayout(~sawonB, ~sawoffB),
 		HLayout(~szallB, ~szallN),
 		HLayout(~sz1B, ~sz1ixN, ~sz1N),
+		HLayout(~mkalB, ~pausealB, ~resumealB, ~stopalB),
 		~rmvsqgB,
 		~rmvsptsB
 	    )
@@ -160,29 +198,5 @@ w = Window.new(bounds:Rect(20,1000,300,600)).layout_(
 //Y - 20, 100, 180, 260, 340, 420, 500
 
 
-( //A&L Cell locations
-~alY = [20, 100, 180, 260, 340, 420, 500];
-~alX = [20, 100, 180, 260, 340, 420, 500, 580, 660, 740, 820, 900, 980];
- //make an array of all of the combinations
-~alLocA = Array.newClear(0);
-~alY.do({|it, ix| ~alX.do({|jt, jx| if(jx>=ix, {~alLocA = ~alLocA.add([it, jt])})})});
-)
-~alLoc = ~alLocA.removeAt(rand(~alLocA.size)); //grab a random location and remove from array
 
-( //make an array of all of the combinations
-~alc = Array.fill(20, {|ix| ix+1});
-~alA = Array.newClear(0);
-~alc.do({|it| ~alc.do({|jt| if(jt>=it, {~alA = ~alA.add([it, jt])})})});
-)
-~cell = ~alA.removeAt(rand(~alA.size)); //grab a random cell and remove from array
-
-~als = Array.newClear(0);
-~alLocA.do({ |it, ix|
-	~alLoc = ~alLocA.removeAt(rand(~alLocA.size));
-	~cell = ~alA.removeAt(rand(~alA.size));
-	~als = ~als.add([ix, ~alLoc[1], ~alLoc[0], ~cell[0], ~cell[1] ]);
-});
-
-
-t.sendMsg("/mkal", 1, 106, 100, 1, 18);
 
