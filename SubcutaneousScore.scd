@@ -153,10 +153,36 @@ w = Window.new(bounds:Rect(20,1000,300,600)).layout_(
 ).front;
 )
 
-//Squiggles
-//rmv squigg
-//stop spots
+//13 X 7 grid
+//20px margins
+//15 space
+//X - 20, 100, 180, 260, 340, 420, 500, 580, 660, 740, 820, 900, 980
+//Y - 20, 100, 180, 260, 340, 420, 500
 
-//saw on off
-//resize all
-//resize one
+
+( //A&L Cell locations
+~alY = [20, 100, 180, 260, 340, 420, 500];
+~alX = [20, 100, 180, 260, 340, 420, 500, 580, 660, 740, 820, 900, 980];
+ //make an array of all of the combinations
+~alLocA = Array.newClear(0);
+~alY.do({|it, ix| ~alX.do({|jt, jx| if(jx>=ix, {~alLocA = ~alLocA.add([it, jt])})})});
+)
+~alLoc = ~alLocA.removeAt(rand(~alLocA.size)); //grab a random location and remove from array
+
+( //make an array of all of the combinations
+~alc = Array.fill(20, {|ix| ix+1});
+~alA = Array.newClear(0);
+~alc.do({|it| ~alc.do({|jt| if(jt>=it, {~alA = ~alA.add([it, jt])})})});
+)
+~cell = ~alA.removeAt(rand(~alA.size)); //grab a random cell and remove from array
+
+~als = Array.newClear(0);
+~alLocA.do({ |it, ix|
+	~alLoc = ~alLocA.removeAt(rand(~alLocA.size));
+	~cell = ~alA.removeAt(rand(~alA.size));
+	~als = ~als.add([ix, ~alLoc[1], ~alLoc[0], ~cell[0], ~cell[1] ]);
+});
+
+
+t.sendMsg("/mkal", 1, 106, 100, 1, 18);
+
