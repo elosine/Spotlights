@@ -79,6 +79,7 @@ void setup() {
   meosc.plug(spots, "go", "/go");
   meosc.plug(spots, "goall", "/goall");
   meosc.plug(spots, "spin", "/spin");
+  meosc.plug(spots, "reSize", "/sz");
 
   meosc.plug(setOSticks, "mk", "/mkstick");
   meosc.plug(setOSticks, "rmv", "/rmvstick");

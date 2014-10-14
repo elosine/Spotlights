@@ -230,6 +230,7 @@ class Spotlight {
     sawon = true;
     // println("classgood");
   } //End Method
+  
 
 
   void hit(String name, float pwr) {
@@ -406,6 +407,20 @@ class SpotlightSet {
       }
     }
   } //End method
+
+  void reSize(int ix, float sz) {
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      if (inst.ix == ix) {
+            inst.sl.setSize(sz);
+            inst.size = sz;
+        break;
+      }
+    }
+  } //End method
+  
+
+
 
   void go2(int ix, int x, int y, float adelay) {
     for (int i=clset.size ()-1; i>=0; i--) {
