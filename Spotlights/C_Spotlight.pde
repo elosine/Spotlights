@@ -38,6 +38,15 @@ class Spotlight {
   float iris = 0.25;
   float dynmaskdia;
 
+  boolean orbit = false;
+  float oval = 0.0;
+  float ospeed = 0.01;
+  float ox, oy;
+  float ow = 100.0;
+  float oh = 100.0;
+  float ocx = 200.0;
+  float ocy = 200.0;
+
   //Constructor 1
   Spotlight(int aix, float astartx, float astarty, float asize, String aclrname) {
     ix = aix;
@@ -121,8 +130,10 @@ class Spotlight {
       rect(0, 0, 2, size);
       popMatrix();
 
-     // spinnervel = constrain( (spinnervel += spinneraccl), 0, 50);
+
+      // spinnervel = constrain( (spinnervel += spinneraccl), 0, 50);
       spinnerdeg += spinnervel;
+    } else {
     }
 
 
@@ -187,6 +198,20 @@ class Spotlight {
       meosc.send(sndy, sc);
     }
 
+    if (orbit) {
+      shadowOn = false;
+      ox = sin(oval);
+      oy = cos(oval);
+      ox *= ow;
+      oy *= oh;
+      ox += ocx;
+      oy += ocy;
+      sl.setPosition(ox, oy);
+      oval += ospeed;
+    } else {
+      oval = 0.0;
+    }
+
 
     stroke( clr.get(clrname) );
     strokeWeight(bdrwt);
@@ -230,7 +255,7 @@ class Spotlight {
     sawon = true;
     // println("classgood");
   } //End Method
-  
+
 
 
   void hit(String name, float pwr) {
@@ -329,8 +354,12 @@ class SpotlightSet {
       if (inst.ix == ix) {
         if (on == 1) {
           inst.spinner = true;
+          inst.sl.setStatic(true);
+          inst.sl.setSensor(true);
         } else {
           inst.spinner = false;
+          inst.sl.setStatic(false);
+          inst.sl.setSensor(false);
         }
         break;
       }
@@ -412,13 +441,13 @@ class SpotlightSet {
     for (int i=clset.size ()-1; i>=0; i--) {
       Spotlight inst = clset.get(i);
       if (inst.ix == ix) {
-            inst.sl.setSize(sz);
-            inst.size = sz;
+        inst.sl.setSize(sz);
+        inst.size = sz;
         break;
       }
     }
   } //End method
-  
+
 
 
 
@@ -487,6 +516,48 @@ class SpotlightSet {
       }
     }
   } //End method
+
+
+  void orbit(int ix, float ospd, float ow, float oh, float ocx, float ocy) {
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      if (inst.ix == ix) {
+        inst.orbit = true;
+        inst.ospeed = ospd;
+        inst.ow = ow;
+        inst.oh = oh;
+        inst.ocx = ocx;
+        inst.ocy = ocy;
+        inst.sl.setStatic(true);
+        inst.sl.setSensor(true);      
+        break;
+      }
+    }
+  } //End  method
+
+
+  void orbitoff(int ix) {
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      if (inst.ix == ix) {
+        inst.orbit = false;
+        inst.sl.setStatic(false);
+        inst.sl.setSensor(false); 
+        break;
+      }
+    }
+  } //End  method
+
+
+  void orbitspd(int ix, float spd) {
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      if (inst.ix == ix) {
+        inst.ospeed = spd;
+        break;
+      }
+    }
+  } //End  method
 
 
 

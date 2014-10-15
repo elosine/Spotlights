@@ -1,7 +1,7 @@
-//make arrays of messages and routines to send one msg at a time
 
 (
-~wt = 0.05;
+t = NetAddr("127.0.0.1", 1231);
+~wt = 0.005;
 
 //CREATE STATIC SPOTS
 ~mksptsA = [
@@ -21,7 +21,6 @@
 	/*5*/{ t.sendMsg("/rmvspot", /*ix*/5) }
 ];
 
-
 //SET INITIAL VELOCITY-Y
 ~ivelx = 0.0;
 ~ively = 300.0;
@@ -33,6 +32,14 @@
 	/*5*/ {t.sendMsg("/setvel", /*ix*/5, /*velx*/~ivelx, /*vely*/~ively)}
 ];
 
+//Stop all
+~stopA = [
+	/*1*/ {t.sendMsg("/setvel", /*ix*/1, /*velx*/0.0, /*vely*/0.0)},
+	/*2*/ {t.sendMsg("/setvel", /*ix*/2, /*velx*/0.0, /*vely*/0.0)},
+	/*3*/ {t.sendMsg("/setvel", /*ix*/3, /*velx*/0.0, /*vely*/0.0)},
+	/*4*/ {t.sendMsg("/setvel", /*ix*/4, /*velx*/0.0, /*vely*/0.0)},
+	/*5*/ {t.sendMsg("/setvel", /*ix*/5, /*velx*/0.0, /*vely*/0.0)}
+];
 
 //SQUIGGLES
 ~sqgA = [
@@ -48,8 +55,6 @@
 /*5*/{t.sendMsg("/anisqig", /*ix*/5, /*go*/1, /*freqlow*/2, /*freqhi*/11)}
 ];
 
-
-
 //REMOVE SQUIGS
 ~rmvsqgA = [
 	/*1*/{ t.sendMsg("/rmvsqig", /*ix*/1) },
@@ -58,7 +63,6 @@
 	/*4*/{ t.sendMsg("/rmvsqig", /*ix*/4) },
 	/*5*/{ t.sendMsg("/rmvsqig", /*ix*/5) }
 ];
-
 
 //SAW ON
 ~sawonA = [
@@ -69,8 +73,6 @@
 /*1*/ {t.sendMsg("/sawon", /*ix*/5, /*minsize*/30.0, /*maxsize*/120.0, /*dur*/ 21.0)}
 ];
 
-
-
 //SAW OFF
 ~sawoffA = [
 	/*1*/{ t.sendMsg("/sawoff", /*ix*/1) },
@@ -79,7 +81,6 @@
 	/*4*/{ t.sendMsg("/sawoff", /*ix*/4) },
 	/*5*/{ t.sendMsg("/sawoff", /*ix*/5) }
 ];
-
 
 //RESIZE ALL
 ~szall = 120.0;
@@ -91,13 +92,17 @@
 	/*5*/ {t.sendMsg("/sz", /*ix*/5, /*velx*/~szall)}
 ];
 
+//ORBIT OFF ALL
+~orbitoffallA = [
+	/*1*/{ t.sendMsg("/orbitoff", /*ix*/1) },
+	/*2*/{ t.sendMsg("/orbitoff", /*ix*/2) },
+	/*3*/{ t.sendMsg("/orbitoff", /*ix*/3) },
+	/*4*/{ t.sendMsg("/orbitoff", /*ix*/4) },
+	/*5*/{ t.sendMsg("/orbitoff", /*ix*/5) }
+];
 
 
 
-
-)
-
-(
 ~mksptsR = Routine{ ~mksptsA.do({ |it| it.value; ~wt.wait }) };
 ~rmvsptsR = Routine{ ~rmvsptsA.do({ |it| it.value; ~wt.wait }) };
 ~ivelR = Routine{ ~ivelA.do({ |it| it.value; ~wt.wait }) };
@@ -106,43 +111,40 @@
 ~sawonR = Routine{ ~sawonA.do({ |it| it.value; ~wt.wait }) };
 ~sawoffR = Routine{ ~sawoffA.do({ |it| it.value; ~wt.wait }) };
 ~rszallR = Routine{ ~rszallA.do({ |it| it.value; ~wt.wait }) };
-
+~stopR = Routine{ ~stopA.do({ |it| it.value; ~wt.wait }) };
+~orbitoffallR = Routine{ ~orbitoffallA.do({ |it| it.value; ~wt.wait }) };
 
  //A&L Cell locations
 ~alY = [20, 100, 180, 260, 340, 420, 500];
 ~alX = [20, 100, 180, 260, 340, 420, 500, 580, 660, 740, 820, 900, 980];
  //make an array of all of the combinations
 ~alLocA = Array.newClear(0);
-~alY.do({|it, ix| ~alX.do({|jt, jx| if(jx>=ix, {~alLocA = ~alLocA.add([it, jt])})})});
+~alY.do({|it, ix| ~alX.do({|jt, jx| ~alLocA = ~alLocA.add([it, jt])})});
 
 //make an array of all of the combinations
-~alc = Array.fill(20, {|ix| ix+1});
+~alc = Array.fill(20, {|ix| ix});
 ~alA = Array.newClear(0);
 ~alc.do({|it| ~alc.do({|jt| if(jt>=it, {~alA = ~alA.add([it, jt])})})});
 
 //Array ~als will contain all of the arguments for making a Arcs & Lines cell
 ~als = Array.newClear(0);
-~alLocA.do({ |it, ix|
-	~alLoc = ~alLocA.removeAt(rand(~alLocA.size));
-	~cell = ~alA.removeAt(rand(~alA.size));
-	~als = ~als.add([ix, ~alLoc[1], ~alLoc[0], ~cell[0], ~cell[1] ]);
+~alLocA2 = ~alLocA.scramble;
+~alA2 = ~alA.scramble;
+~alLocA2.do({ |it, ix|
+	~als = ~als.add([ix, it[1], it[0], ~alA2[ix][0], ~alA2[ix][1] ]);
 });
 
 ~alRout = Task{
 	~als.do({ |it|
-		~argstemp = ~als.removeAt(rand(~als.size));
-		t.sendMsg("/mkal", ~argstemp[0], ~argstemp[1], ~argstemp[2], ~argstemp[3], ~argstemp[4]);
-		rand(1.5, 7).wait;
+		t.sendMsg("/mkal", it[0], it[1], it[2], it[3], it[4]);
+		rand(2.5, 7.7).wait;
 	});
 };
-)
 
-
-
-
-(
 ~mksptsB = Button().states_([ ["Make Spots", Color.black, Color.green] ]).mouseDownAction_({ ~mksptsR.play; ~mksptsR.reset });
 ~rmvsptsB = Button().states_([ ["Remove Spots", Color.black, Color.yellow] ]).mouseDownAction_({ ~rmvsptsR.play; ~rmvsptsR.reset });
+
+~stopB = Button().states_([ ["Stop Spots", Color.black, Color.green] ]).mouseDownAction_({ ~stopR.play; ~stopR.reset });
 
 ~ivelxT = NumberBox().value_(0.0).action_({ |it| ~ivelx=it.value });
 ~ivelyT = NumberBox().value_(300.0).action_({ |it| ~ively=it.value });
@@ -168,25 +170,47 @@
 ~sz1ixN = NumberBox().value_(1).action_({ |it| ~sz1ix=it.value.asInteger }).step_(1);
 ~sz1N = NumberBox().value_(120.0).action_({ |it| ~sz1=it.value });
 
-~mkalB = Button().states_([ ["Arcs & Lines", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.start });
-~pausealB = Button().states_([ ["Pause A & L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.pause });
-~resumealB = Button().states_([ ["Resume A & L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.resume });
-~stopalB = Button().states_([ ["Stop A & L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.stop; ~alRout.reset });
+~mkalB = Button().states_([ ["Arcs&Lines", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.start });
+~pausealB = Button().states_([ ["Pause A&L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.pause });
+~resumealB = Button().states_([ ["Resume A&L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.resume });
+~stopalB = Button().states_([ ["Stop A&L", Color.black, Color.green] ]).mouseDownAction_({ ~alRout.stop; ~alRout.reset });
 
+~rmvalB = Button().states_([ ["Remove A&L", Color.black, Color.yellow] ]).mouseDownAction_({ t.sendMsg("/rmvallal") });
 
+~spinix = 1;
+~spinN = NumberBox().value_(1).action_({ |it| ~spinix=it.value.asInteger }).step_(1);
+~spinonB = Button().states_([ ["Spin On", Color.black, Color.green] ]).mouseDownAction_({ t.sendMsg("/spin", ~spinix, 1); t.sendMsg("/setvel", ~spinix, 0.0, 0.0)});
+~spinoffB = Button().states_([ ["Spin Off", Color.black, Color.green] ]).mouseDownAction_({ t.sendMsg("/spin", ~spinix, 0) });
 
-w = Window.new(bounds:Rect(20,1000,300,600)).layout_(
+~orbix = 1; ~orbspd=0.0020; ~orbw=200.0; ~orbh=200.0;
+~orbB = Button().states_([ ["Orbit", Color.black, Color.green] ]).mouseDownAction_({ t.sendMsg("/orbit", /*ix*/~orbix, /*spd*/~orbspd, /*w*/~orbw, /*h*/~orbh, /*ctx*/533.0, /*cty*/300.0) });
+~orboffB = Button().states_([ ["Orbit Off", Color.black, Color.green] ]).mouseDownAction_({ t.sendMsg("/orbitoff", /*ix*/~orbix) });
+~orbN = NumberBox().value_(1).action_({ |it| ~orbix=it.value.asInteger }).step_(1);
+~orbspdN = NumberBox().value_(0.0020).action_({ |it| ~orbspd=it.value }).minDecimals_(4);
+~orbwN = NumberBox().value_(200.0).action_({ |it| ~orbw=it.value });
+~orbhN = NumberBox().value_(200.0).action_({ |it| ~orbh=it.value });
+
+~orbitoffallB = Button().states_([ ["All Off", Color.black, Color.yellow] ]).mouseDownAction_({~orbitoffallR.play; ~orbitoffallR.reset });
+
+~notes = TextView().string_("1: Unison Impacts\n2: Out of Phase\n3: Squigs\n4: Spin\n5: X-Velocity; Saw On\n6: Stop/Start; Change Size\n7: Spin\n8: Orbit/Arcs & Lines\n9: Start/Stop; Spin\n10: Speed Change\n11: Bounce w/A&L; Velocity\n12: Halt & Remove Spots\n1=orange, 2=green, 3=blue, 4=magenta, 5=yellow");
+
+w = Window.new(bounds:Rect(10,800,500,800)).layout_(
 	    VLayout (
 		~mksptsB,
 		HLayout(~ivelB, ~ivelxT, ~ivelyT),
+		~stopB,
 		~sqgB,
 		HLayout(~pushyB, ~pixN, ~pxN, ~pyN),
 		HLayout(~sawonB, ~sawoffB),
 		HLayout(~szallB, ~szallN),
 		HLayout(~sz1B, ~sz1ixN, ~sz1N),
+		HLayout(~spinonB, ~spinoffB, ~spinN),
 		HLayout(~mkalB, ~pausealB, ~resumealB, ~stopalB),
+		HLayout(~orbB, ~orboffB, ~orbitoffallB, ~orbN, ~orbspdN, ~orbwN, ~orbhN),
+		~rmvalB,
 		~rmvsqgB,
-		~rmvsptsB
+		~rmvsptsB,
+		~notes
 	    )
 ).front;
 )
@@ -196,7 +220,3 @@ w = Window.new(bounds:Rect(20,1000,300,600)).layout_(
 //15 space
 //X - 20, 100, 180, 260, 340, 420, 500, 580, 660, 740, 820, 900, 980
 //Y - 20, 100, 180, 260, 340, 420, 500
-
-
-
-

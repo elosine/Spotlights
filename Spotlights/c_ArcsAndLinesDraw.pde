@@ -43,6 +43,11 @@ class ArcsAndLinesDrawz{
     }
   }// end rmv method
   
+  
+  void rmvall(){
+      cset.clear();
+  }// end rmv method
+  
   //
 } // end class ArcsAndLinesDrawz
 

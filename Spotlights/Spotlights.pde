@@ -11,8 +11,8 @@ PGraphics masklayer;
 float frmrate = 24;
 float secperframe = 1.0/frmrate;
 
-int w = 1280;
-int h = 720;
+int w = 1066;
+int h = 600;
 
 float gravityx = 0.0;
 float gravityy = 0.0;
@@ -80,6 +80,9 @@ void setup() {
   meosc.plug(spots, "goall", "/goall");
   meosc.plug(spots, "spin", "/spin");
   meosc.plug(spots, "reSize", "/sz");
+  meosc.plug(spots, "orbit", "/orbit");
+  meosc.plug(spots, "orbitoff", "/orbitoff");
+  meosc.plug(spots, "orbitspd", "/orbitspd");
 
   meosc.plug(setOSticks, "mk", "/mkstick");
   meosc.plug(setOSticks, "rmv", "/rmvstick");
@@ -92,6 +95,7 @@ void setup() {
 
   meosc.plug(aldrwset, "mk", "/mkal");
   meosc.plug(aldrwset, "rmv", "/rmval");
+  meosc.plug(aldrwset, "rmvall", "/rmvallal");
 }
 
 
