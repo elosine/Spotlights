@@ -493,6 +493,22 @@ class SpotlightSet {
   } //End method
 
 
+  void setvelocitys(String aix, String ax, String ay) {
+      
+    int ix = int(aix);
+    float x = float(ax);
+    float y = float(ay);
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      if (inst.ix == ix) {
+        inst.sl.setVelocity(x, y);
+        break;
+      }
+    }
+  } //End method
+
+
+
   void adjvelocity(String aix, String ax, String ay) {
     
     int ix = int(aix);
