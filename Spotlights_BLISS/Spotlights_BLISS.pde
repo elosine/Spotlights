@@ -76,6 +76,7 @@ void setup() {
   meosc.plug(spots, "setvelocity", "/setvel");
   meosc.plug(spots, "setvelocitys", "/setvels");
   meosc.plug(spots, "adjvelocity", "/adjvel");
+  meosc.plug(spots, "pushstr", "/push");
   meosc.plug(spots, "setbounce", "/setbounce");
   meosc.plug(spots, "go", "/go");
   meosc.plug(spots, "goall", "/goall");

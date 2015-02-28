@@ -4,7 +4,7 @@ t = NetAddr("127.0.0.1", 1231);
 ~wt = 0.005;
 ~numspts = 10;
 //CREATE STATIC SPOTS
-~clrs = ["beet", "orange", "red", "green", "blue", "violetred", "mint", "purple", "pink", "sunshine"];
+~clrs = ["pine", "orange", "red", "green", "blue", "white", "mint", "purple", "pink", "sunshine"];
 ~mksptsF = {|numspts|
 	{
 		numspts.do{|ix|
@@ -53,11 +53,14 @@ t = NetAddr("127.0.0.1", 1231);
 
 ~mksptsF.value(~numspts);
 ~rmvsptsF.value(~numspts);
-~ivelF.value(~numspts, 0.07);
+~ivelF.value(~numspts, 0.2);
 ~stopallF.value(~numspts);
 
+(
+~stopallF.value(~numspts);
 
-
+~ivelF.value(~numspts, 0.2);
+)
 
 //SQUIGGLES
 ~sqgA = [

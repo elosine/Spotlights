@@ -312,6 +312,20 @@ class SpotlightSet {
     clset.add(new Spotlight(ix, startx, starty, size, clrname, velx, vely));
   } // End mkinst Method
 
+  // Make Multi Method //
+  void mkmulti(int num) {
+    String[] spclrs = {"pine", "orange", "red", "green",
+    "blue", "white", "mint", "purple", "pink", "sunshine",
+  "springgreen","goldenrod", "slateblue", "indigo", "beet",
+  "fig", "peacock" };
+    int gapt = 10;
+    float spsz = ((width-gapt)/num)-gapt;
+for(int i=0;i<num;i++){
+    clset.add(new Spotlight(i, gapt+(spsz/2)+((gapt+spsz)*i), (spsz/2)+gapt, spsz,
+    spclrs[i%num], 0.0, 0.0));
+    }
+  } 
+
   void drwTopLayer() {
     for (int i=clset.size ()-1; i >= 0; i--) {
       // for(int i=0; i<clset.size(); i++){
@@ -452,8 +466,6 @@ class SpotlightSet {
   } //End method
 
 
-
-
   void go2(int ix, int x, int y, float adelay) {
     for (int i=clset.size ()-1; i>=0; i--) {
       Spotlight inst = clset.get(i);
@@ -481,7 +493,6 @@ class SpotlightSet {
     }
   } //End method
 
-
   void setvelocity(int ix, float x, float y) {
     for (int i=clset.size ()-1; i>=0; i--) {
       Spotlight inst = clset.get(i);
@@ -492,9 +503,7 @@ class SpotlightSet {
     }
   } //End method
 
-
   void setvelocitys(String aix, String ax, String ay) {
-      
     int ix = int(aix);
     float x = float(ax);
     float y = float(ay);
@@ -507,10 +516,7 @@ class SpotlightSet {
     }
   } //End method
 
-
-
-  void adjvelocity(String aix, String ax, String ay) {
-    
+  void pushstr(String aix, String ax, String ay) {
     int ix = int(aix);
     float x = float(ax);
     float y = float(ay);
@@ -524,6 +530,19 @@ class SpotlightSet {
         if (inst.sl.getVelocityY() >= 0) ydirtemp = 1.0; 
         else ydirtemp = -1.0;
         inst.sl.adjustVelocity(x*xdirtemp, y*ydirtemp);
+        break;
+      }
+    }
+  } //End method
+
+  void adjvelocity(String aix, String ax, String ay) {
+    int ix = int(aix);
+    float x = float(ax);
+    float y = float(ay);
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      if (inst.ix == ix) {
+        inst.sl.adjustVelocity(x, y);
         break;
       }
     }
