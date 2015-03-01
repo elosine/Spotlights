@@ -306,6 +306,7 @@ class Spotlight {
 
 class SpotlightSet {
   ArrayList<Spotlight> clset = new ArrayList<Spotlight>();
+  boolean ctl = false;
 
   // Make Instance Method //
   void mkinst(int ix, float startx, float starty, float size, String clrname, float velx, float vely) {
@@ -313,28 +314,31 @@ class SpotlightSet {
   } // End mkinst Method
 
   // Make Multi Method //
-  void mkmulti(int num) {
-    String[] spclrs = {"pine", "orange", "red", "green",
-    "blue", "white", "mint", "purple", "pink", "sunshine",
-  "springgreen","goldenrod", "slateblue", "indigo", "beet",
-  "fig", "peacock" };
+  void mkmulti(String snum) {
+    int num = int(snum);
+    String[] spclrs = {
+      "pine", "orange", "red", "green", 
+      "blue", "white", "mint", "purple", "pink", "sunshine", 
+      "springgreen", "goldenrod", "slateblue", "indigo", "beet", 
+      "fig", "peacock"
+    };
     int gapt = 10;
     float spsz = ((width-gapt)/num)-gapt;
-for(int i=0;i<num;i++){
-    clset.add(new Spotlight(i, gapt+(spsz/2)+((gapt+spsz)*i), (spsz/2)+gapt, spsz,
-    spclrs[i%num], 0.0, 0.0));
+    for (int i=0; i<num; i++) {
+      clset.add(new Spotlight(i, gapt+(spsz/2)+((gapt+spsz)*i), (spsz/2)+gapt, spsz, 
+      spclrs[i%num], 0.0, 0.0));
     }
   } 
 
   void drwTopLayer() {
     for (int i=clset.size ()-1; i >= 0; i--) {
-      // for(int i=0; i<clset.size(); i++){
       Spotlight inst = clset.get(i);
       inst.drwShadow();
     }
   } //End Method
 
   void drwbglayer() {
+
     for (int i=clset.size ()-1; i >= 0; i--) {
       Spotlight inst = clset.get(i);
       inst.pxCt();
@@ -351,6 +355,20 @@ for(int i=0;i<num;i++){
       }
     }
   } //End rmv method
+
+  void rmvall() {
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      mundo.remove(inst.sl);
+    }
+    clset.clear();
+  } //End rmv method
+  
+  void lock(int lk){
+    println(lk);
+    if(lk==0) ctl=false;
+    else ctl=true;
+  }
 
   void halt(int ix) {
     for (int i=clset.size ()-1; i>=0; i--) {
@@ -504,14 +522,16 @@ for(int i=0;i<num;i++){
   } //End method
 
   void setvelocitys(String aix, String ax, String ay) {
-    int ix = int(aix);
-    float x = float(ax);
-    float y = float(ay);
-    for (int i=clset.size ()-1; i>=0; i--) {
-      Spotlight inst = clset.get(i);
-      if (inst.ix == ix) {
-        inst.sl.setVelocity(x, y);
-        break;
+    if (ctl) {
+      int ix = int(aix);
+      float x = float(ax);
+      float y = float(ay);
+      for (int i=clset.size ()-1; i>=0; i--) {
+        Spotlight inst = clset.get(i);
+        if (inst.ix == ix) {
+          inst.sl.setVelocity(x, y);
+          break;
+        }
       }
     }
   } //End method
@@ -536,16 +556,28 @@ for(int i=0;i<num;i++){
   } //End method
 
   void adjvelocity(String aix, String ax, String ay) {
-    int ix = int(aix);
-    float x = float(ax);
-    float y = float(ay);
-    for (int i=clset.size ()-1; i>=0; i--) {
-      Spotlight inst = clset.get(i);
-      if (inst.ix == ix) {
-        inst.sl.adjustVelocity(x, y);
-        break;
+    if (ctl) {
+      int ix = int(aix);
+      float x = float(ax);
+      float y = float(ay);
+      for (int i=clset.size ()-1; i>=0; i--) {
+        Spotlight inst = clset.get(i);
+        if (inst.ix == ix) {
+          inst.sl.adjustVelocity(x, y);
+          break;
+        }
       }
     }
+  } //End method
+
+  void adjvelocityi(int ix, float x, float y) {
+      for (int i=clset.size ()-1; i>=0; i--) {
+        Spotlight inst = clset.get(i);
+        if (inst.ix == ix) {
+          inst.sl.adjustVelocity(x, y);
+          break;
+        }
+      }
   } //End method
 
 
@@ -558,6 +590,19 @@ for(int i=0;i<num;i++){
       }
     }
   } //End method
+  
+  void bouncy(int ix, int tog) {
+    boolean btog;
+    if(tog==1)btog=false;
+    else btog=true;
+    for (int i=clset.size ()-1; i>=0; i--) {
+      Spotlight inst = clset.get(i);
+      if (inst.ix == ix) {
+        inst.sl.setSensor(btog);      
+        break;
+      }
+    }
+  } //End  method
 
 
   void orbit(int ix, float ospd, float ow, float oh, float ocx, float ocy) {

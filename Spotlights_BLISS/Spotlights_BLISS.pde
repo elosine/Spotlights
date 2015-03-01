@@ -62,7 +62,9 @@ void setup() {
   aldrwset = new ArcsAndLinesDrawz();
 
   meosc.plug(spots, "mkinst", "/mkspot");
+  meosc.plug(spots, "mkmulti", "/mkspots");
   meosc.plug(spots, "rmv", "/rmvspot");
+  meosc.plug(spots, "rmvall", "/rmvallspts");
   meosc.plug(spots, "hit", "/hit");
   meosc.plug(spots, "push", "/push");
   meosc.plug(spots, "sizesawon", "/sawon");
@@ -76,6 +78,7 @@ void setup() {
   meosc.plug(spots, "setvelocity", "/setvel");
   meosc.plug(spots, "setvelocitys", "/setvels");
   meosc.plug(spots, "adjvelocity", "/adjvel");
+  meosc.plug(spots, "adjvelocityi", "/adjveli");
   meosc.plug(spots, "pushstr", "/push");
   meosc.plug(spots, "setbounce", "/setbounce");
   meosc.plug(spots, "go", "/go");
@@ -85,6 +88,8 @@ void setup() {
   meosc.plug(spots, "orbit", "/orbit");
   meosc.plug(spots, "orbitoff", "/orbitoff");
   meosc.plug(spots, "orbitspd", "/orbitspd");
+  meosc.plug(spots, "lock", "/lock");
+  meosc.plug(spots, "bouncy", "/bouncy");
 
   meosc.plug(setOSticks, "mk", "/mkstick");
   meosc.plug(setOSticks, "rmv", "/rmvstick");
@@ -239,14 +244,6 @@ class CrookedLine {
     b.popMatrix();
   }
 }
-
-
-
-
-
-
-
-
 
 
 PVector[] dashed(int x1, int y1, int x2, int y2, int steps) {
