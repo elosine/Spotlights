@@ -25,6 +25,43 @@ s.waitForBoot{ fork{
 		sig = Decimator.ar(in, LFTri.kr(0.05).range(300, 8000), LFTri.kr(0.04).range(4,12));
 		Out.ar(0, sig);
 	}).add
+
+	SynthDef(\lpc, {
+		arg caribs, modibs, caramp=1, modamp=1, obs, modobs, carobs, atk=0.02, rel=0.1, crv= 0, gate=1;
+		var car, mod, mod2, sig, env, amp;
+		caramp = \caramp.kr(0.0, 0.01).dbamp;
+		modamp = \modamp.kr(0.0, 0.01).dbamp;
+		amp = \amp.kr(0,0.01).dbamp;
+		env = EnvGen.ar( Env.asr(atk, 1, rel, crv), gate );
+		car = In.ar(caribs, 2)*caramp;
+		Out.ar(carobs, car);
+		mod = In.ar(modibs, 2)*modamp;
+		Out.ar(modobs, mod);
+		sig = LPCAnalyzer.ar(car, mod);
+		Out.ar(obs, sig*amp*env);
+	}).add;
+
+	SynthDef(\spectralvocoder, {
+		arg ibs1, ibs2, inamp1=1, inamp2=1,obs=0, freeze = 0, mode=2.4,gate=1;
+		var bufA, bufB, bufC, bufD, chain1a, chain1b, chain2a, chain2b, sig1, sig2, out1, out2, freq, amp, env;
+		amp = \amp.kr(0.85, 0.05);
+		env = EnvGen.ar(Env.asr(0.01, 1, 0.1),gate, doneAction:2);
+		bufA = LocalBuf.new(2048);
+		bufB = LocalBuf.new(2048);
+		bufC = LocalBuf.new(2048);
+		bufD = LocalBuf.new(2048);
+		chain1a = FFT(bufA, In.ar(ibs1)*inamp1); // to be filtered
+		chain2a = FFT(bufB, In.ar(ibs2)*inamp2);
+		sig1 = PV_SpectralMap(chain1a, chain2a, 0.0, freeze, mode, 1);
+		chain1b = FFT(bufC, In.ar(ibs1)*inamp1); // to be filtered
+		chain2b = FFT(bufD, In.ar(ibs2+1)*inamp2);
+		sig2 = PV_SpectralMap(chain1b, chain2b, 0.0, freeze, mode, 1);
+		out1 = IFFT(sig1);
+		out2 = IFFT(sig2);
+		Out.ar(obs, [out1,out2]*env*amp);
+	}).add;
+
+
 }}
 )
 x = Synth(\icy_live, [\buf, ~buf, \winsz, 0.6, \overlaps, 17, \rand, 0.1, \envbuf, ~ebf[0],\ratemin,5, \ratemax, 0.00000001, \rate, 0.98, \rel, 2, \crv, -6 ]);
